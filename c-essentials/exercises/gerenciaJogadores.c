@@ -17,7 +17,7 @@ void alterarIdade(Jogador jogadores[], int qtdJogadores, char nomeJogador[], int
 void ordenarJogadoresPorIdade(Jogador jogadores[], int n);
 void calcularDobroIdade(Jogador *j);
 int compararIdade(const Jogador *j1, const Jogador *j2);
-int contarJogadoresNegativos(const Jogador *array, int n);
+int contarJogadoresNegativos(const Jogador jogadores[], int n);
 void lerJogadores(Jogador *jogadores, int qtdJogadores);
 
 int main(int argc, char* argv[]) {
@@ -66,6 +66,16 @@ int main(int argc, char* argv[]) {
       printf("\nInsira um valor válido.");
     }
   }
+
+  calcularDobroIdade(&jogadores[qtdJogadores - 1]);
+
+  printf("\nO dobro da idade do último jogador (%s) é %d.", jogadores[qtdJogadores - 1].nome, jogadores[qtdJogadores - 1].idade);
+
+  if (qtdJogadores > 1) {
+    compararIdade(&jogadores[0], &jogadores[1]);
+  }
+
+  printf("\nExiste(m) %d jogador(es) com a camisa negativada.", contarJogadoresNegativos(jogadores, qtdJogadores));
 
   return 0;
 }
@@ -123,4 +133,29 @@ void alterarIdade(Jogador jogadores[], int qtdJogadores, char nomeJogador[], int
   if (!jogadorExiste) {
     printf("\nO jogador requisitado não foi cadastrado.");
   }
+}
+
+void calcularDobroIdade(Jogador *j) {
+  j->idade = (j->idade * 2);
+}
+
+int compararIdade(const Jogador *j1, const Jogador *j2) {
+  if (j1->idade > j2->idade) {
+    printf("\nO jogador %s é mais velho que o jogador %s, com %d anos de diferença.", j1->nome, j2->nome, (j1->idade - j2->idade));
+  } else if (j1->idade < j2->idade) {
+    printf("\nO jogador %s é mais novo que o jogador %s, com %d anos de diferença.", j1->nome, j2->nome, (j2->idade - j1->idade));
+  } else {
+    printf("\nOs jogadores %s e %s possuem a mesma idade.", j1->nome, j2->nome);
+  }
+}
+
+int contarJogadoresNegativos(const Jogador jogadores[], int n) {
+  int contador = 0;
+  for (int i = 0; i < n; i++) {
+    if (jogadores[i].idade < 0) {
+      contador++;
+    }
+  }
+
+  return contador;
 }
