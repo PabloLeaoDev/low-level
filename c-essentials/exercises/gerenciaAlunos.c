@@ -35,9 +35,8 @@ void menu() {}
 void cadastrarAluno(Aluno* aluno) {
   fptr = fopen("alunos.txt", "a");
 
-  if (fptr == NULL) {
-    printf("The file is not exists. It will be create.");
-  }
+  if (!fptr)
+    printf("O arquivo não existe. Ele será criado.");
 
   fprintf(fptr, "======= Aluno: %s =======\n", aluno->nome);
   fprintf(fptr, "Curso: %s\n", aluno->curso);
@@ -53,9 +52,24 @@ void cadastrarAluno(Aluno* aluno) {
   return 0;
 }
 
-void imprimirAlunos() {}
+void imprimirAlunos() {
+  fptr = fopen("alunos.txt", "r");
 
-void buscarAluno(char nome[], int matricula) {}
+  if (!fptr) {
+    fprintf(stderr, "Erro ao abrir arquivo!\n");
+    return EXIT_FAILURE;
+  }
+
+  char buffer_aluno[100];
+  while (fscanf(ftpr, "%s\n", buffer_aluno) > 0)
+    printf("%s", buffer_aluno);
+
+  fclose(fptr);
+}
+
+void buscarAluno(char nome[], int matricula) {
+  
+}
 
 void removerAluno(char nome[], int matricula) {}
 
