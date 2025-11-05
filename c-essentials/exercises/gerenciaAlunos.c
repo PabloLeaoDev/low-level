@@ -1,59 +1,87 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#define LEN(array) (sizeof(array) / sizeof(array[0]))
 
 FILE* fptr;
 
-typedef struct Aluno {
+typedef struct aluno_s {
   char nome[50];
   char curso[30];
-  int dataNascimento[4];
+  int data_nasc[4];
   int matricula;
   float altura;
   float peso;
   float notas[4];
-  float mediaFinal;
-} Aluno;
+  float media_final;
+} aluno_t;
 
 void menu();
-void cadastrarAluno(Aluno* aluno);
-void imprimirAlunos();
-void buscarAluno(char nome[], int matricula);
-void removerAluno(char nome[], int matricula);
-void gerarRelatorioGeral();
-void exibirEstatisticas();
+void cadastrar_aluno(aluno_t* aluno);
+void imprimir_alunos();
+void buscar_aluno(char nome[], int matricula);
+void remover_aluno(char nome[], int matricula);
+void gerarRelatorio_geral();
+void exibir_estatisticas();
 
 int main(int argc, char* argv[]) {
-  Aluno aluno;
+  aluno_t aluno;
 
-  scanf("");
+  strcpy(aluno.nome, "teste");
+  strcpy(aluno.curso, "teste1");
+
+  for (int i = 0; i < LEN(aluno.data_nasc); i++)
+    aluno.data_nasc[i] = i;
+
+  aluno.matricula = 1;
+  aluno.altura = 175;
+  aluno.peso = 70;
+
+  for (int i = 0; i < LEN(aluno.notas); i++)
+    aluno.notas[i] = i;
+
+  aluno.media_final = 7.5;
+
+  cadastrar_aluno(&aluno);
   // menu();
   return 0;
 }
 
 void menu() {}
 
-void cadastrarAluno(Aluno* aluno) {
-  fptr = fopen("alunos.txt", "a");
+void cadastrar_aluno(aluno_t *aluno) {
+  fptr = fopen("alunos.dat", "ab");
 
   if (!fptr)
     printf("O arquivo não existe. Ele será criado.");
 
-  fprintf(fptr, "======= Aluno: %s =======\n", aluno->nome);
-  fprintf(fptr, "Curso: %s\n", aluno->curso);
-  fprintf(fptr, "Data do Nascimento: %d/%d/%d\n", aluno->dataNascimento[0], aluno->dataNascimento[1], aluno->dataNascimento[2]);
-  fprintf(fptr, "Matricula: %d\n", aluno->matricula);
-  fprintf(fptr, "Altura: %.2f\n", aluno->altura);
-  fprintf(fptr, "Peso: %.2f\n", aluno->peso);
-  fprintf(fptr, "Notas: \n  %.2f\n  %.2f\n  %.2f\n", aluno->notas[0], aluno->notas[1], aluno->notas[2]);
-  fprintf(fptr, "Media Final: %.2f\n", aluno->mediaFinal);
+  aluno_t a;
+
+  strcpy(a.nome, aluno->nome);
+  strcpy(a.curso, aluno->curso);
+
+  for (int i = 0; i < LEN(aluno->data_nasc); i++)
+    a.data_nasc[i] = aluno->data_nasc[i];
+
+  a.matricula = aluno->matricula;
+  a.altura = aluno->altura;
+  a.peso = aluno->peso;
+
+  for (int i = 0; i < LEN(aluno->notas); i++)
+    a.notas[i] = aluno->notas[i];
+
+  a.media_final = aluno->media_final;
+
+  fwrite(&a, sizeof(aluno_t), 1, fptr);
 
   fclose(fptr);
 
   return 0;
 }
 
-void imprimirAlunos() {
-  fptr = fopen("alunos.txt", "r");
+void imprimir_alunos() {
+  fptr = fopen("alunos.dat", "rb");
 
   if (!fptr) {
     fprintf(stderr, "Erro ao abrir arquivo!\n");
@@ -61,18 +89,18 @@ void imprimirAlunos() {
   }
 
   char buffer_aluno[100];
-  while (fscanf(ftpr, "%s\n", buffer_aluno) > 0)
+  while (fscanf(fptr, "%s\n", buffer_aluno) > 0)
     printf("%s", buffer_aluno);
 
   fclose(fptr);
 }
 
-void buscarAluno(char nome[], int matricula) {
+void buscar_aluno(char nome[], int matricula) {
   
 }
 
-void removerAluno(char nome[], int matricula) {}
+void remover_aluno(char nome[], int matricula) {}
 
-void gerarRelatorioGeral() {}
+void gerarRelatorio_geral() {}
 
-void exibirEstatisticas() {}
+void exibir_estatisticas() {}
