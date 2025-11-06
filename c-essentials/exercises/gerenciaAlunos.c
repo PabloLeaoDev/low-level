@@ -19,7 +19,7 @@ typedef struct aluno_s {
 
 void menu();
 void cadastrar_aluno(aluno_t* aluno);
-void imprimir_alunos();
+int imprimir_alunos();
 void buscar_aluno(char nome[], int matricula);
 void remover_aluno(char nome[], int matricula);
 void gerarRelatorio_geral();
@@ -76,11 +76,9 @@ void cadastrar_aluno(aluno_t *aluno) {
   fwrite(&a, sizeof(aluno_t), 1, fptr);
 
   fclose(fptr);
-
-  return 0;
 }
 
-void imprimir_alunos() {
+int imprimir_alunos() {
   fptr = fopen("alunos.dat", "rb");
 
   if (!fptr) {
@@ -93,6 +91,8 @@ void imprimir_alunos() {
     printf("%s", buffer_aluno);
 
   fclose(fptr);
+
+  return 0;
 }
 
 void buscar_aluno(char nome[], int matricula) {
