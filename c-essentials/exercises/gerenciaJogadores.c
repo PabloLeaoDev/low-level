@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
     printf("\n\nDeseja alterar a idade de %s jogador [S/N]? ", texto);
     scanf(" %c", &desejaAlterarIdade);
   
-    if (tolower(desejaAlterarIdade) == tolower('S')) {
+    if (tolower(desejaAlterarIdade) == 's') {
       char nomeJogador[50];
       int novaIdade;
   
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
       scanf("%d", &novaIdade);
       
       alterarIdade(jogadores, qtdJogadores, nomeJogador, novaIdade);
-    } else if (tolower(desejaAlterarIdade) == tolower('N')) {
+    } else if (tolower(desejaAlterarIdade) == 'n') {
       break;
     } else {
       printf("\nInsira um valor válido.");
