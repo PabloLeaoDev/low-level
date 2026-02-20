@@ -9,7 +9,7 @@ FILE* fptr;
 typedef struct aluno_s {
   char nome[50];
   char curso[30];
-  int data_nasc[4];
+  int data_nasc[3];
   int matricula;
   float altura;
   float peso;
@@ -19,11 +19,12 @@ typedef struct aluno_s {
 
 void menu();
 void cadastrar_aluno(aluno_t* aluno);
-int imprimir_alunos();
 void buscar_aluno(char nome[], int matricula);
 void remover_aluno(char nome[], int matricula);
 void gerarRelatorio_geral();
 void exibir_estatisticas();
+int imprimir_alunos();
+char[4] completar_zeros(int valor, int qtd_zeros);
 
 int main(int argc, char* argv[]) {
   aluno_t aluno;
@@ -31,24 +32,39 @@ int main(int argc, char* argv[]) {
   strcpy(aluno.nome, "teste");
   strcpy(aluno.curso, "teste1");
 
-  for (int i = 0; i < LEN(aluno.data_nasc); i++)
-    aluno.data_nasc[i] = i;
+  aluno.data_nasc[0] = 1;
+  aluno.data_nasc[1] = 3;
+  aluno.data_nasc[2] = 2000;
 
   aluno.matricula = 1;
   aluno.altura = 175;
   aluno.peso = 70;
 
   for (int i = 0; i < LEN(aluno.notas); i++)
-    aluno.notas[i] = i;
-
-  aluno.media_final = 7.5;
+    aluno.notas[i] = 10;
 
   cadastrar_aluno(&aluno);
+
+  imprimir_alunos();
+
   // menu();
   return 0;
 }
 
 void menu() {}
+
+char[] completar_zeros(int valor, int qtd_zeros) {
+  char[qtd_zeros] valor_formatado;
+
+  for (int i = 0; i < qtd_zeros; i++) {
+    if (i == 0)
+      sprintf(valor_formatado, "%d", valor);
+    else
+      sprintf(valor_formatado, "%d", 0);
+  }
+
+  return valor_formatado;
+}
 
 void cadastrar_aluno(aluno_t *aluno) {
   fptr = fopen("alunos.dat", "ab");
@@ -56,7 +72,7 @@ void cadastrar_aluno(aluno_t *aluno) {
   if (!fptr)
     printf("O arquivo não existe. Ele será criado.");
 
-  aluno_t a;
+  aluno_t a = {0};
 
   strcpy(a.nome, aluno->nome);
   strcpy(a.curso, aluno->curso);
@@ -68,10 +84,12 @@ void cadastrar_aluno(aluno_t *aluno) {
   a.altura = aluno->altura;
   a.peso = aluno->peso;
 
-  for (int i = 0; i < LEN(aluno->notas); i++)
+  for (int i = 0; i < LEN(aluno->notas); i++) {
     a.notas[i] = aluno->notas[i];
+    a.media_final += aluno->notas[i];
+  }
 
-  a.media_final = aluno->media_final;
+  a.media_final = a.media_final / LEN(aluno->notas);
 
   fwrite(&a, sizeof(aluno_t), 1, fptr);
 
@@ -86,18 +104,30 @@ int imprimir_alunos() {
     return EXIT_FAILURE;
   }
 
-  char buffer_aluno[100];
-  while (fscanf(fptr, "%s\n", buffer_aluno) > 0)
-    printf("%s", buffer_aluno);
+  aluno_t aluno_lido;
+
+  while (fread(&aluno_lido, sizeof(aluno_t), 1, fptr) == 1) {
+    printf("Nome: %s\n", aluno_lido.nome);
+    printf("Curso: %s\n", aluno_lido.curso);
+
+    char nascimento[20];
+
+    sprintf(nascimento, "%s/%s/%s", completar_zeros(aluno_lido.data_nasc[0], 2), completar_zeros(aluno_lido.data_nasc[1], 2), completar_zeros(aluno_lido.data_nasc[2], 4));
+
+    printf("Nascimento: %s\n", nascimento);
+    printf("Matricula: %d\n", aluno_lido.matricula);
+    printf("Altura: %d\n", aluno_lido.altura);
+    printf("Peso: %d\n", aluno_lido.peso);
+    printf("Media Final: %.2f\n", aluno_lido.media_final);
+    printf("---------------------------\n");
+  }
 
   fclose(fptr);
 
   return 0;
 }
 
-void buscar_aluno(char nome[], int matricula) {
-  
-}
+void buscar_aluno(char nome[], int matricula) {}
 
 void remover_aluno(char nome[], int matricula) {}
 
